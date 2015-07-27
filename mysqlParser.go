@@ -28,12 +28,12 @@ var (
 	//		[1 ... x]:	columns
 	//		[x + 1]:	engine_name
 	// result:	"CREATE TABLE IF NOT EXISTS table_name(column1, column2, ..., columnX) ENGINE= engine_name;"
-	CREATE_TABLE = fillRequest(3, -1, fillCreate_Table)
+	CREATE_TABLE = fillRequest(3, -1, fillCreateTable)
 
 	// DROP_TABLE converts the values to a DROP TABLE-Statement
 	// values:	[0 ... x]:	tables
 	// result:	"DROP TABLE IF EXISTS table1, table2, ..., tableX;"
-	DROP_TABLE = fillRequest(1, -1, fillDrop_Table)
+	DROP_TABLE = fillRequest(1, -1, fillDropTable)
 
 	// INSERT_INTO converts the values to a INSERT INTO-Statement
 	// values:	[0]:		table_name
@@ -41,7 +41,7 @@ var (
 	//		[2]:		values1
 	//		[3 ... X]:	values2 ... valuesX	(optional)
 	// result:	"INSERT INTO table_name(columns) VALUES(values1), (values2), ..., (valuesX);"
-	INSERT_INTO = fillRequest(3, -1, fillInsert_Into)
+	INSERT_INTO = fillRequest(3, -1, fillInsertInto)
 
 	// DELETE converts the values to a DELETE-Statement
 	// values:	[0]:	table_name
@@ -58,9 +58,9 @@ var (
 
 type fill func(values []string) (request string)
 
-func fillRequest(min_args, max_args int, requestFiller fill) func([]string) string {
+func fillRequest(minArgs, maxArgs int, requestFiller fill) func([]string) string {
 	return func(values []string) string {
-		if (len(values) <= max_args || max_args < 0) && len(values) >= min_args {
+		if (len(values) <= maxArgs || maxArgs < 0) && len(values) >= minArgs {
 			return requestFiller(values)
 		}
 		return ""
@@ -82,7 +82,7 @@ func fillSelect(values []string) (request string) {
 	return
 }
 
-func fillCreate_Table(values []string) (request string) {
+func fillCreateTable(values []string) (request string) {
 	switch size := len(values); {
 	case size > 3:
 		for i := 2; i < size-1; i++ {
@@ -95,7 +95,7 @@ func fillCreate_Table(values []string) (request string) {
 	return
 }
 
-func fillDrop_Table(values []string) (request string) {
+func fillDropTable(values []string) (request string) {
 	switch size := len(values); {
 	case size > 1:
 		for i := 1; i < size; i++ {
@@ -108,7 +108,7 @@ func fillDrop_Table(values []string) (request string) {
 	return
 }
 
-func fillInsert_Into(values []string) (request string) {
+func fillInsertInto(values []string) (request string) {
 	switch size := len(values); {
 	case size > 3:
 		for i := 3; i < size; i++ {
