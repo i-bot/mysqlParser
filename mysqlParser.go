@@ -5,13 +5,55 @@ import (
 )
 
 var (
-	OPEN         = fillRequest(5, 5, fillOpen)
-	SELECT       = fillRequest(2, 3, fillSelect)
+	// OPEN converts the values to the data source for the Go-MySQL-Driver to be
+	// used as argument for sql.Open
+	// values:	[0]:	username
+	//		[1]:	password
+	//		[2]:	IP
+	//		[3]:	port
+	//		[4]:	db_name
+	// result:	"username:password@tcp(IP:port)/db_name"
+	OPEN = fillRequest(5, 5, fillOpen)
+
+	// SELECT converts the values to a basic SELECT-Statement
+	// values:	[0]:	select_expr
+	//		[1]:	table_reference
+	//		[2]:	where_condition	(optional)
+	// result:	"SELECT select_expr FROM table_reference;"
+	//		"SELECT select_expr FROM table_reference WHERE where_condition;"
+	SELECT = fillRequest(2, 3, fillSelect)
+
+	// CREATE_TABLE converts the values to a CREATE TABLE-Statement
+	// values:	[0]:		table_name
+	//		[1 ... x]:	columns
+	//		[x + 1]:	engine_name
+	// result:	"CREATE TABLE IF NOT EXISTS table_name(column1, column2, ..., columnX) ENGINE= engine_name;"
 	CREATE_TABLE = fillRequest(3, -1, fillCreate_Table)
-	DROP_TABLE   = fillRequest(1, -1, fillDrop_Table)
-	INSERT_INTO  = fillRequest(3, -1, fillInsert_Into)
-	DELETE       = fillRequest(2, 2, fillDelete)
-	AS           = fillRequest(2, 2, fillAs)
+
+	// DROP_TABLE converts the values to a DROP TABLE-Statement
+	// values:	[0 ... x]:	tables
+	// result:	"DROP TABLE IF EXISTS table1, table2, ..., tableX;"
+	DROP_TABLE = fillRequest(1, -1, fillDrop_Table)
+
+	// INSERT_INTO converts the values to a INSERT INTO-Statement
+	// values:	[0]:		table_name
+	//		[1]:		colunms
+	//		[2]:		values1
+	//		[3 ... X]:	values2 ... valuesX	(optional)
+	// result:	"INSERT INTO table_name(columns) VALUES(values1), (values2), ..., (valuesX);"
+	INSERT_INTO = fillRequest(3, -1, fillInsert_Into)
+
+	// DELETE converts the values to a DELETE-Statement
+	// values:	[0]:	table_name
+	//		[1]:	where_condition
+	// result:	"DELETE FROM table_name WHERE where_condition;"
+	DELETE = fillRequest(2, 2, fillDelete)
+
+	// AS converts the values to basic a AS-Statement (removes ';' if necessary)
+	// values:	[0]:	select_query
+	//		[1]:	table_name
+	// result:	(select_query) AS table_name;"
+	AS = fillRequest(2, 2, fillAs)
 )
 
 type fill func(values []string) (request string)
