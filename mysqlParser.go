@@ -50,11 +50,28 @@ var (
 	// result:	"DELETE FROM table_name WHERE where_condition;"
 	DELETE = fillRequest(2, 2, fillDelete)
 
-	// AS converts the values to basic a AS-Statement (removes ';' if necessary)
+	// AS converts the values to a AS-Statement (removes ';' if necessary)
 	// values:	[0]:	select_query
 	//		[1]:	table_name
-	// result:	(select_query) AS table_name;"
+	// result:	"(select_query) AS table_name;"
 	AS = fillRequest(2, 2, fillAs)
+
+	// AND converts the values to a AND-Statement
+	// values:	[0]:	operand1
+	//		[1]:	operand2
+	// result:	"(operand1 AND operand2)"
+	AND = fillRequest(2, 2, fillAnd)
+
+	// OR converts the values to a Or-Statement
+	// values:	[0]:	operand1
+	//		[1]:	operand2
+	// result:	"(operand1 OR operand2)"
+	OR = fillRequest(2, 2, fillOr)
+
+	// NOT converts the values to a NOT-Statement
+	// values:	[0]:	operand
+	// result:	"(NOT operand)"
+	NOT = fillRequest(1, 1, fillNot)
 )
 
 type fill func(values []string) (request string)
@@ -134,6 +151,30 @@ func fillAs(values []string) (request string) {
 	switch size := len(values); {
 	case size == 2:
 		request = "(" + strings.TrimSuffix(values[0], ";") + ") AS " + values[1] + ";"
+	}
+	return
+}
+
+func fillAnd(values []string) (request string) {
+	switch size := len(values); {
+	case size == 2:
+		request = "(" + values[0] + " AND " + values[1] + ")"
+	}
+	return
+}
+
+func fillOr(values []string) (request string) {
+	switch size := len(values); {
+	case size == 2:
+		request = "(" + values[0] + " OR " + values[1] + ")"
+	}
+	return
+}
+
+func fillNot(values []string) (request string) {
+	switch size := len(values); {
+	case size == 1:
+		request = "(NOT " + values[0] + ")"
 	}
 	return
 }
