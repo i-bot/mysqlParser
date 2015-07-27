@@ -1,3 +1,4 @@
+// A small parser for MySQL-Statements
 package mysqlParser
 
 import (
