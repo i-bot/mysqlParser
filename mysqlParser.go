@@ -1,4 +1,4 @@
-package mysql-parser
+package mysqlParser
 
 import (
 	"strings"
