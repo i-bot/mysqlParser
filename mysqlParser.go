@@ -57,16 +57,18 @@ var (
 	AS = fillRequest(2, 2, fillAs)
 
 	// AND converts the values to a AND-Statement
-	// values:	[0]:	operand1
-	//		[1]:	operand2
-	// result:	"(operand1 AND operand2)"
-	AND = fillRequest(2, 2, fillAnd)
+	// values:	[0]:		operand1
+	//		[1]:		operand2
+	//		[3 ... X]:	operand3 ... operandX	(optional)
+	// result:	"(operand1 AND operand2 AND operand3 AND ... AND operandX)"
+	AND = fillRequest(2, -1, fillAnd)
 
 	// OR converts the values to a Or-Statement
-	// values:	[0]:	operand1
-	//		[1]:	operand2
-	// result:	"(operand1 OR operand2)"
-	OR = fillRequest(2, 2, fillOr)
+	// values:	[0]:		operand1
+	//		[1]:		operand2
+	//		[3 ... X]:	operand3 ... operandX	(optional)
+	// result:	"(operand1 OR operand2 OR operand3 OR ... OR operandX)"
+	OR = fillRequest(2, -1, fillOr)
 
 	// NOT converts the values to a NOT-Statement
 	// values:	[0]:	operand
@@ -174,16 +176,26 @@ func fillAs(values []string) (request string) {
 
 func fillAnd(values []string) (request string) {
 	switch size := len(values); {
+	case size > 2:
+		for i := 2; i < size; i++ {
+			request += " AND " + values[i]
+		}
+		fallthrough
 	case size == 2:
-		request = "(" + values[0] + " AND " + values[1] + ")"
+		request = "(" + values[0] + " AND " + values[1] + request + ")"
 	}
 	return
 }
 
 func fillOr(values []string) (request string) {
 	switch size := len(values); {
+	case size > 2:
+		for i := 2; i < size; i++ {
+			request += " OR " + values[i]
+		}
+		fallthrough
 	case size == 2:
-		request = "(" + values[0] + " OR " + values[1] + ")"
+		request = "(" + values[0] + " OR " + values[1] + request + ")"
 	}
 	return
 }
