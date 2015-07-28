@@ -72,6 +72,23 @@ var (
 	// values:	[0]:	operand
 	// result:	"(NOT operand)"
 	NOT = fillRequest(1, 1, fillNot)
+
+	// REGEXP converts the values to a REGEXP-Statement
+	// values:	[0]:	expression
+	//		[1]:	pattern
+	// result:	"(expression REGEXP pattern)"
+	REGEXP = fillRequest(2, 2, fillRegexp)
+
+	// SET converts the values to a SET-Statement
+	// values:	[0]:	expression
+	// result:	"SET expression;"
+	SET = fillRequest(1, 1, fillSet)
+
+	// UPDATE converts the values to a UPDATE-Statement
+	// values:	[0]:	table
+	//		[1]:	expression
+	// result:	"UPDATE table SET expression;"
+	UPDATE = fillRequest(2, 2, fillUpdate)
 )
 
 type fill func(values []string) (request string)
@@ -175,6 +192,30 @@ func fillNot(values []string) (request string) {
 	switch size := len(values); {
 	case size == 1:
 		request = "(NOT " + values[0] + ")"
+	}
+	return
+}
+
+func fillRegexp(values []string) (request string) {
+	switch size := len(values); {
+	case size == 2:
+		request = "(" + values[0] + " REGEXP " + values[1] + ")"
+	}
+	return
+}
+
+func fillSet(values []string) (request string) {
+	switch size := len(values); {
+	case size == 1:
+		request = "SET " + values[0] + ";"
+	}
+	return
+}
+
+func fillUpdate(values []string) (request string) {
+	switch size := len(values); {
+	case size == 2:
+		request = "UPDATE " + values[0] + " SET " + values[1] + ";"
 	}
 	return
 }
