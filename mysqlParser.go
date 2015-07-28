@@ -26,13 +26,14 @@ var (
 
 	// CREATE_TABLE converts the values to a CREATE TABLE-Statement
 	// values:	[0]:		table_name
-	//		[1 ... x]:	columns
-	//		[x + 1]:	engine_name
+	//		[1]:		column1
+	//		[2 ... X]:	column2 ... columnX	(optional)
+	//		[X + 1]:	engine_name
 	// result:	"CREATE TABLE IF NOT EXISTS table_name(column1, column2, ..., columnX) ENGINE= engine_name;"
 	CREATE_TABLE = fillRequest(3, -1, fillCreateTable)
 
 	// DROP_TABLE converts the values to a DROP TABLE-Statement
-	// values:	[0 ... x]:	tables
+	// values:	[0 ... x]:	table1 ... tableX
 	// result:	"DROP TABLE IF EXISTS table1, table2, ..., tableX;"
 	DROP_TABLE = fillRequest(1, -1, fillDropTable)
 
