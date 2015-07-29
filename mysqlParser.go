@@ -96,8 +96,8 @@ var (
 
 type fill func(values []string) (request string)
 
-func fillRequest(minArgs, maxArgs int, requestFiller fill) func([]string) string {
-	return func(values []string) string {
+func fillRequest(minArgs, maxArgs int, requestFiller fill) func(...string) string {
+	return func(values ...string) string {
 		if (len(values) <= maxArgs || maxArgs < 0) && len(values) >= minArgs {
 			return requestFiller(values)
 		}
