@@ -2,6 +2,7 @@
 package mysqlParser
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -98,10 +99,16 @@ type fill func(values []string) (request string)
 
 func fillRequest(minArgs, maxArgs int, requestFiller fill) func(...string) string {
 	return func(values ...string) string {
-		if (len(values) <= maxArgs || maxArgs < 0) && len(values) >= minArgs {
+		switch length := len(values); {
+		case (length > maxArgs && maxArgs >= 0):
+			fmt.Printf("Too much arguments, don't pass more than %d", maxArgs)
+			return ""
+		case length < minArgs:
+			fmt.Printf("Not enough arguments, pass at least %d", minArgs)
+			return ""
+		default:
 			return requestFiller(values)
 		}
-		return ""
 	}
 }
 
